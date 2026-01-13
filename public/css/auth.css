@@ -1,0 +1,426 @@
+/* ===== تنسيقات صفحات التسجيل والدخول ===== */
+
+.auth-container {
+    min-height: calc(100vh - 76px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.auth-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    width: 100%;
+    max-width: 500px;
+}
+
+.auth-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2.5rem;
+    text-align: center;
+}
+
+.auth-header h2 {
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+}
+
+.auth-header p {
+    opacity: 0.9;
+    margin-bottom: 0;
+    font-size: 1rem;
+}
+
+.auth-body {
+    padding: 2.5rem;
+}
+
+.auth-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.auth-form .form-label {
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.auth-form .form-control {
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+    padding: 14px 15px;
+    font-size: 1rem;
+    transition: all 0.3s;
+    height: 48px;
+}
+
+.auth-form .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+}
+
+.auth-form .form-select {
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+    padding: 12px 15px;
+    font-size: 1rem;
+    transition: all 0.3s;
+    height: 48px;
+}
+
+.auth-form .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+}
+
+.auth-form .form-check-input {
+    width: 1.1em;
+    height: 1.1em;
+    margin-top: 0.2em;
+}
+
+.auth-form .form-check-label {
+    font-weight: 500;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+/* زر المصادقة الرئيسي */
+.auth-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    width: 100%;
+    transition: all 0.3s;
+    margin-top: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 52px;
+}
+
+.auth-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.auth-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.auth-btn i {
+    font-size: 1.2rem;
+}
+
+/* زر Google محسّن */
+.google-btn {
+    background-color: white;
+    color: #555;
+    border: 2px solid #ddd;
+    padding: 14px 24px;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 1rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s;
+    cursor: pointer;
+    text-decoration: none;
+    height: 52px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.google-btn:hover {
+    border-color: #DB4437;
+    color: #DB4437;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(219, 68, 55, 0.2);
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.google-btn:active {
+    transform: translateY(0);
+}
+
+.google-btn i {
+    color: #DB4437;
+    font-size: 1.2rem;
+}
+
+/* الروابط في المصادقة */
+.auth-links {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
+.auth-links a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.auth-links a:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+.auth-links p {
+    margin-bottom: 0;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+/* الفاصل */
+.auth-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 1.5rem 0;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #eee;
+}
+
+.auth-divider span {
+    padding: 0 1rem;
+    background: white;
+}
+
+/* التنبيهات في المصادقة */
+.auth-body .alert {
+    border-radius: 10px;
+    border: none;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    font-size: 0.95rem;
+}
+
+.auth-body .alert i {
+    margin-right: 8px;
+}
+
+/* قوة كلمة المرور */
+.password-strength {
+    height: 5px;
+    background-color: #eee;
+    border-radius: 3px;
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+.password-strength-meter {
+    height: 100%;
+    width: 0;
+    transition: width 0.3s;
+    border-radius: 3px;
+}
+
+.strength-weak {
+    background-color: #e74c3c;
+}
+
+.strength-medium {
+    background-color: #f39c12;
+}
+
+.strength-strong {
+    background-color: #27ae60;
+}
+
+/* روابط صغيرة */
+.auth-small-link {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.auth-small-link:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* أزرار داخلية */
+.auth-inline-btn {
+    background: none;
+    border: none;
+    color: #667eea;
+    padding: 0;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+}
+
+.auth-inline-btn:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* التحقق من صحة الحقول */
+.auth-form .is-invalid {
+    border-color: #e74c3c;
+}
+
+.auth-form .is-invalid:focus {
+    border-color: #e74c3c;
+    box-shadow: 0 0 0 0.25rem rgba(231, 76, 60, 0.25);
+}
+
+.auth-form .is-valid {
+    border-color: #27ae60;
+}
+
+.auth-form .is-valid:focus {
+    border-color: #27ae60;
+    box-shadow: 0 0 0 0.25rem rgba(39, 174, 96, 0.25);
+}
+
+.invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #e74c3c;
+}
+
+/* تحسين الشيك بوكس */
+.auth-form .form-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.auth-form .form-check-input {
+    margin-top: 0.25em;
+}
+
+.auth-form .form-check-label a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-form .form-check-label a:hover {
+    text-decoration: underline;
+}
+
+/* نصوص المساعدة */
+.auth-help-text {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+/* النصوص الصغيرة */
+.auth-small-text {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* الإرسال */
+.auth-submit-container {
+    margin-top: 1.5rem;
+}
+
+/* تنسيقات الـ Checkboxes والـ Radio buttons */
+.auth-form .form-check {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+    min-height: auto;
+    padding-right: 0;
+}
+
+.auth-form .form-check-input {
+    float: none;
+    margin-left: 0;
+    margin-right: 0.5em;
+    margin-top: 0;
+    width: 1.2em;
+    height: 1.2em;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.auth-form .form-check-input:checked {
+    background-color: #667eea;
+    border-color: #667eea;
+}
+
+.auth-form .form-check-input:focus {
+    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+    border-color: #667eea;
+}
+
+.auth-form .form-check-label {
+    margin-bottom: 0;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.4;
+}
+
+.auth-form .form-check-label a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.auth-form .form-check-label a:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* خاص للـ Terms and Conditions */
+.auth-form .form-check.terms-check {
+    align-items: flex-start;
+    margin-top: 1rem;
+}
+
+.auth-form .form-check.terms-check .form-check-input {
+    margin-top: 0.2em;
+}
