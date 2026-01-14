@@ -35,15 +35,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-     // دالة للبحث عن مستخدم بالبريد أو إنشاء جديد
+    // دالة للبحث عن مستخدم بالبريد أو إنشاء جديد
     public static function findByEmailOrCreate($googleUser)
     {
         $user = self::where('email', $googleUser->email)->first();
-        
+
         if (!$user) {
             // إنشاء اسم من Google إذا لم يكن موجوداً
             $name = $googleUser->name ?? $googleUser->email;
-            
+
             $user = self::create([
                 'name' => $name,
                 'email' => $googleUser->email,
@@ -63,7 +63,7 @@ class User extends Authenticatable
                 'avatar' => $googleUser->avatar ?? $user->avatar,
             ]);
         }
-        
+
         return $user;
     }
 
@@ -80,30 +80,75 @@ class User extends Authenticatable
             $this->attributes['whatsapp'] = null;
             return;
         }
-
-        // تنظيف الرقم من المسافات والرموز
+    
         $cleaned = preg_replace('/[^0-9]/', '', $value);
-
-        // جميع الأنماط المطلوبة:
-        // 1. 059xxxxxxx أو 056xxxxxxx → تحويل إلى 97059xxxxxxx أو 97056xxxxxxx
-        if (preg_match('/^(059|056)(\d{7})$/', $cleaned, $matches)) {
-            $this->attributes['whatsapp'] = '970' . $matches[1] . $matches[2];
+        
+        // القاعدة: جميع الأرقام تُخزن كـ 97259xxxxxxx أو 97256xxxxxxx
+        // (يمكنك تغييرها لـ 970 إذا أردت)
+        
+        // 1. 059xxxxxxx → 97259xxxxxxx
+        if (preg_match('/^059(\d{7})$/', $cleaned, $matches)) {
+            $this->attributes['whatsapp'] = '97259' . $matches[1];
         }
-        // 2. +97259xxxxxxx أو +97256xxxxxxx → تحويل إلى 97059xxxxxxx أو 97056xxxxxxx
-        elseif (preg_match('/^972(59|56)(\d{7})$/', $cleaned, $matches)) {
-            $this->attributes['whatsapp'] = '970' . $matches[1] . $matches[2];
+        // 2. 056xxxxxxx → 97256xxxxxxx
+        elseif (preg_match('/^056(\d{7})$/', $cleaned, $matches)) {
+            $this->attributes['whatsapp'] = '97256' . $matches[1];
         }
-        // 3. +97059xxxxxxx أو +97056xxxxxxx → تأكيد التنسيق
-        elseif (preg_match('/^970(59|56)(\d{7})$/', $cleaned, $matches)) {
+        // 3. 59xxxxxxx → 97259xxxxxxx (بدون 0)
+        elseif (preg_match('/^59(\d{7})$/', $cleaned, $matches)) {
+            $this->attributes['whatsapp'] = '97259' . $matches[1];
+        }
+        // 4. 56xxxxxxx → 97256xxxxxxx (بدون 0)
+        elseif (preg_match('/^56(\d{7})$/', $cleaned, $matches)) {
+            $this->attributes['whatsapp'] = '97256' . $matches[1];
+        }
+        // 5. 97259xxxxxxx → احتفظ به كما هو
+        elseif (preg_match('/^97259\d{7}$/', $cleaned)) {
             $this->attributes['whatsapp'] = $cleaned;
         }
-        // 4. 0097259xxxxxxx أو 0097256xxxxxxx → تحويل إلى 97059xxxxxxx أو 97056xxxxxxx
-        elseif (preg_match('/^00972(59|56)(\d{7})$/', $cleaned, $matches)) {
-            $this->attributes['whatsapp'] = '970' . $matches[1] . $matches[2];
+        // 6. 97256xxxxxxx → احتفظ به كما هو
+        elseif (preg_match('/^97256\d{7}$/', $cleaned)) {
+            $this->attributes['whatsapp'] = $cleaned;
         }
-        // 5. 0097059xxxxxxx أو 0097056xxxxxxx → تحويل إلى 97059xxxxxxx أو 97056xxxxxxx
-        elseif (preg_match('/^00970(59|56)(\d{7})$/', $cleaned, $matches)) {
-            $this->attributes['whatsapp'] = '970' . $matches[1] . $matches[2];
+        // 7. 97059xxxxxxx → حول إلى 97259xxxxxxx
+        elseif (preg_match('/^97059(\d{7})$/', $cleaned, $matches)) {
+            $this->attributes['whatsapp'] = '97259' . $matches[1];
+        }
+        // 8. 97056xxxxxxx → حول إلى 97256xxxxxxx
+        elseif (preg_match('/^97056(\d{7})$/', $cleaned, $matches)) {
+            $this->attributes['whatsapp'] = '97256' . $matches[1];
+        }
+        // 9. +97259xxxxxxx → 97259xxxxxxx
+        elseif (preg_match('/^\+?97259(\d{7})$/', $cleaned, $matches)) {
+            $this->attributes['whatsapp'] = '97259' . $matches[1];
+        }
+        // 10. +97256xxxxxxx → 97256xxxxxxx
+        elseif (preg_match('/^\+?97256(\d{7})$/', $cleaned, $matches)) {
+            $this->attributes['whatsapp'] = '97256' . $matches[1];
+        }
+        // 11. +97059xxxxxxx → 97259xxxxxxx
+        elseif (preg_match('/^\+?97059(\d{7})$/', $cleaned, $matches)) {
+            $this->attributes['whatsapp'] = '97259' . $matches[1];
+        }
+        // 12. +97056xxxxxxx → 97256xxxxxxx
+        elseif (preg_match('/^\+?97056(\d{7})$/', $cleaned, $matches)) {
+            $this->attributes['whatsapp'] = '97256' . $matches[1];
+        }
+        // 13. 0097259xxxxxxx → 97259xxxxxxx
+        elseif (preg_match('/^0097259(\d{7})$/', $cleaned, $matches)) {
+            $this->attributes['whatsapp'] = '97259' . $matches[1];
+        }
+        // 14. 0097256xxxxxxx → 97256xxxxxxx
+        elseif (preg_match('/^0097256(\d{7})$/', $cleaned, $matches)) {
+            $this->attributes['whatsapp'] = '97256' . $matches[1];
+        }
+        // 15. 0097059xxxxxxx → 97259xxxxxxx
+        elseif (preg_match('/^0097059(\d{7})$/', $cleaned, $matches)) {
+            $this->attributes['whatsapp'] = '97259' . $matches[1];
+        }
+        // 16. 0097056xxxxxxx → 97256xxxxxxx
+        elseif (preg_match('/^0097056(\d{7})$/', $cleaned, $matches)) {
+            $this->attributes['whatsapp'] = '97256' . $matches[1];
         }
         // إذا كان الرقم غير متوافق
         else {
@@ -118,19 +163,23 @@ class User extends Authenticatable
             return null;
         }
         
-        // إذا كان التنسيق صحيحاً، أرجعه كما هو
-        if (preg_match('/^\+(972|970)(59|56)\d{7}$/', $value)) {
+        // إذا كان الرقم مخزناً كـ 97259xxxxxxx، أرجعه كـ +97259xxxxxxx
+        if (preg_match('/^972(59|56)\d{7}$/', $value)) {
+            return '+' . $value;
+        }
+        
+        // إذا كان مخزناً كـ 97059xxxxxxx، حوله إلى 97259xxxxxxx
+        if (preg_match('/^970(59|56)\d{7}$/', $value, $matches)) {
+            return '+972' . $matches[1] . substr($value, 5);
+        }
+        
+        // إذا كان الرقم له + بالفعل، اتركه
+        if (str_starts_with($value, '+')) {
             return $value;
         }
         
-        // محاولة إصلاح التنسيق
-        $cleaned = preg_replace('/[^0-9]/', '', $value);
-        
-        if (preg_match('/^(972|970)(59|56)\d{7}$/', $cleaned)) {
-            return '+' . $cleaned;
-        }
-        
-        return $value;
+        // إذا لم يكن له +، أضفه
+        return '+' . $value;
     }
 
     // دالة للتحقق من صحة رقم الواتساب
@@ -212,7 +261,7 @@ class User extends Authenticatable
             'khan_younis' => 'خان يونس',
             'rafah' => 'رفح',
         ];
-        
+
         return $regions[$this->region] ?? $this->region;
     }
 
@@ -228,15 +277,15 @@ class User extends Authenticatable
         if (!$this->whatsapp) {
             return null;
         }
-        
+
         // إزالة علامة +
         $number = str_replace('+', '', $this->whatsapp);
         $length = strlen($number);
-        
+
         if ($length <= 4) {
             return $number;
         }
-        
+
         // إخفاء معظم الأرقام مع إظهار الأول والأخير
         return substr($number, 0, 3) . str_repeat('*', $length - 5) . substr($number, -2);
     }
@@ -247,7 +296,7 @@ class User extends Authenticatable
         if (!$this->hasWhatsapp()) {
             return null;
         }
-        
+
         // إزالة علامة + إذا كانت موجودة
         $number = str_replace('+', '', $this->whatsapp);
         return "https://wa.me/{$number}";
@@ -259,18 +308,18 @@ class User extends Authenticatable
         if (empty($this->name)) {
             return '?';
         }
-        
+
         // إزالة المسافات من البداية والنهاية
         $name = trim($this->name);
-        
+
         // الحصول على أول حرف
         $firstChar = mb_substr($name, 0, 1, 'UTF-8');
-        
+
         // إذا كان الحرف فارغاً أو مسافة
         if (empty($firstChar) || $firstChar == ' ') {
             return '?';
         }
-        
+
         return $firstChar;
     }
 }

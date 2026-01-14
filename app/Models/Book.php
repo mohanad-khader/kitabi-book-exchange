@@ -239,10 +239,48 @@ class Book extends Model
     // إنشاء رابط واتساب مباشر
     public function getWhatsappLinkAttribute()
     {
-        if ($this->user->hasWhatsapp()) {
-            $message = urlencode($this->whatsapp_message);
-            return "https://wa.me/" . $this->user->whatsapp . "?text=" . $message;
+        if (!$this->user->hasWhatsapp()) {
+            return null;
         }
-        return null;
+        
+        // احصل على الرقم و نظفه
+        $number = preg_replace('/[^0-9]/', '', $this->user->whatsapp);
+        
+        // تأكد من التنسيق الصحيح لواتساب
+        // واتساب يحتاج الرقم بدون + أو 00
+        
+        // إذا كان الرقم يبدأ بـ 972 أو 970، اتركه كما هو
+        if (preg_match('/^(972|970)/', $number)) {
+            // تأكد من طول الرقم (12 رقم)
+            if (strlen($number) === 12) {
+                $whatsappNumber = $number;
+            } else {
+                // إذا كان الرقم 13 رقم (مثل 970059...)، صححه
+                if (preg_match('/^9700(59|56)(\d{7})$/', $number, $matches)) {
+                    $whatsappNumber = '970' . $matches[1] . $matches[2];
+                } elseif (preg_match('/^9720(59|56)(\d{7})$/', $number, $matches)) {
+                    $whatsappNumber = '972' . $matches[1] . $matches[2];
+                } else {
+                    $whatsappNumber = $number;
+                }
+            }
+        } 
+        // إذا كان الركم يبدأ بـ 059 أو 056، حوله لـ 972
+        elseif (preg_match('/^(059|056)(\d{7})$/', $number, $matches)) {
+            $whatsappNumber = '972' . $matches[1] . $matches[2];
+        }
+        // إذا كان الرقم يبدأ بـ 59 أو 56 فقط
+        elseif (preg_match('/^(59|56)(\d{7})$/', $number, $matches)) {
+            $whatsappNumber = '972' . $matches[1] . $matches[2];
+        }
+        // أي تنسيق آخر
+        else {
+            $whatsappNumber = $number;
+        }
+        
+        $message = urlencode($this->whatsapp_message);
+        
+        // رابط واتساب
+        return "https://wa.me/{$whatsappNumber}?text={$message}";
     }
 }
